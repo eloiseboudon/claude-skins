@@ -42,6 +42,9 @@ const DESIGN_MATCH = /^mcp__skins__design$/
 // A longer prompt keeps Claude Code's own drawing, which folds a big paste.
 const MAX_PROMPT = 4000
 
+// The settings pane's prompt button cycles through these.
+const PROMPT_NEXT: Readonly<Record<Prefs['prompt'], Prefs['prompt']>> = { left: 'right', right: 'plain', plain: 'left' }
+
 const CLIP_HEAD = 8
 const CLIP_TAIL = 4
 const FRAME_MS = 90
@@ -798,7 +801,7 @@ reply width: ${lastColumns} columns`
       tables: () => void commit($, { ...state, prefs: { ...prefs, tables: nextTables(prefs.tables) } }),
       icons: () =>
         void commit($, { ...state, prefs: { ...prefs, icons: prefs.icons === 'unicode' ? 'ascii' : 'unicode' } }),
-      prompt: () => void commit($, { ...state, prefs: { ...prefs, prompt: prefs.prompt === 'left' ? 'right' : 'left' } }),
+      prompt: () => void commit($, { ...state, prefs: { ...prefs, prompt: PROMPT_NEXT[prefs.prompt] } }),
       edit: slot => void update($, editingAtom, () => slot),
       paint: hex => {
         const made = withSlot(prefs.skin === 'off' ? DEFAULT_PREFS.skin : prefs.skin, custom, editing, hex)

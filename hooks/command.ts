@@ -92,7 +92,7 @@ export function parsePrefs(raw: unknown, names: readonly string[]): Prefs {
         ? skin
         : DEFAULT_PREFS.skin,
     icons: saved.icons === 'ascii' ? 'ascii' : 'unicode',
-    prompt: saved.prompt === 'right' ? 'right' : 'left',
+    prompt: saved.prompt === 'right' || saved.prompt === 'plain' ? saved.prompt : 'left',
     rail: flagOr(saved.rail, DEFAULT_PREFS.rail),
     tables: tablesOr(saved.tables, DEFAULT_PREFS.tables),
     shimmer: flagOr(saved.shimmer, DEFAULT_PREFS.shimmer),
@@ -197,9 +197,9 @@ export function runSkinCommand(args: string, current: Prefs, names: readonly str
         ? changed({ ...current, tables: value }, `tables ${value}`)
         : refused(current, 'usage: /skin tables on|text|off')
     case 'prompt':
-      return value === 'left' || value === 'right'
+      return value === 'left' || value === 'right' || value === 'plain'
         ? changed({ ...current, prompt: value }, `prompt ${value}`)
-        : refused(current, 'usage: /skin prompt left|right')
+        : refused(current, 'usage: /skin prompt left|right|plain')
     case 'icons':
       return value === 'unicode' || value === 'ascii'
         ? changed({ ...current, icons: value }, `icons: ${value}`)

@@ -291,6 +291,33 @@ test('/skin prompt right moves the outline to the right, and the settings pane m
   }
 })
 
+test('/skin prompt plain draws the prompt without an outline, and the settings pane cycles left, right, plain', async ($, on) => {
+  stubEngine(on)
+  const pane = await $.ui.mount({ ...PANE, surface: 'desktop' })
+  const press = async () => {
+    await pane.press({ key: 'prompt' })
+
+    return (await pane.find({ key: 'prompt' }))?.props.label
+  }
+
+  await runSkin($, 'prompt left')
+  expect(await press()).toBe('prompt right')
+  expect(await press()).toBe('prompt plain')
+
+  for (const surface of SURFACES) {
+    const typed = await $.ui.mount({ ...SITE, surface, component: 'UserMessage', requestId: 'm1', props: { text: 'fix the build', origin: { kind: 'composer' }, isExpanded: false } })
+    const column = (await typed.find({ type: 'Box' })) as { props: { alignItems?: string }; children?: readonly { props?: { borderStyle?: string } }[] } | undefined
+    expect(column?.props.alignItems).toBe('flex-start')
+    expect(column?.children?.[0]?.props?.borderStyle).toBeUndefined()
+    expect(await typed.find({ type: 'Text', text: '▍ ' })).toBeDefined()
+    expect(await typed.find({ type: surface === 'terminal' ? 'Text' : 'Markdown', text: 'fix the build' })).toBeDefined()
+    await typed.unmount()
+  }
+
+  expect(await press()).toBe('prompt left')
+  await pane.unmount()
+})
+
 test('a reply with a table draws the table, a reply without one keeps its own drawing', async ($, on) => {
   stubEngine(on)
 

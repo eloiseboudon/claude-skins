@@ -296,16 +296,19 @@ export const literal = (text: string): string =>
 
 // Your message in a rounded outline sized to what you typed, so it stands apart from
 // replies without taking the full width. Images it carried follow below it, drawn by
-// Claude Code. `/skin prompt right` puts it on the right, where the desktop app draws it.
+// Claude Code. `/skin prompt right` puts it on the right, where the desktop app draws it,
+// and `/skin prompt plain` drops the outline for the skin's prompt marker.
 // On the desktop app the text is the app's own Markdown, which can be selected and copied;
 // a prompt too long for one Markdown block keeps the Text.
 export function promptRow(look: Look, text: string, images?: ReturnType<Ui['Text']>) {
   const { Box, Markdown, Text } = look.ui
   const markdown = look.surface === 'terminal' ? null : literal(text)
+  const plain = look.prefs.prompt === 'plain'
 
   return (
     <Box flexDirection="column" alignItems={look.prefs.prompt === 'right' ? 'flex-end' : 'flex-start'} marginY={1}>
-      <Box borderStyle="round" borderColor={look.skin.palette.muted} paddingX={1} flexShrink={1}>
+      <Box {...(plain ? {} : { borderStyle: 'round' as const, borderColor: look.skin.palette.muted, paddingX: 1 })} flexShrink={1}>
+        {plain ? <Text color={look.skin.palette.user}>{`${look.icons.prompt} `}</Text> : ''}
         {markdown === null || markdown.length > MAX_MARKDOWN ? (
           <Text color={look.skin.palette.fg}>{text}</Text>
         ) : (

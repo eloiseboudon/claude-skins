@@ -203,14 +203,16 @@ test('tables are on, text or off, and a stored on/off from before still reads', 
   expect(runSkinCommand('list', { ...DEFAULT_PREFS, tables: 'text' }, NAMES).message).toContain('tables text')
 })
 
-test('the prompt sits left or right, and anything else stored reads as left', async () => {
+test('the prompt sits left, right or plain, and anything else stored reads as left', async () => {
   expect(DEFAULT_PREFS.prompt).toBe('left')
   expect(parsePrefs({ prompt: 'right' }, NAMES).prompt).toBe('right')
+  expect(parsePrefs({ prompt: 'plain' }, NAMES).prompt).toBe('plain')
   expect(parsePrefs({ prompt: 'centre' }, NAMES).prompt).toBe('left')
   expect(parsePrefs({ prompt: true }, NAMES).prompt).toBe('left')
   expect(runSkinCommand('prompt right', DEFAULT_PREFS, NAMES).prefs.prompt).toBe('right')
   expect(runSkinCommand('prompt left', { ...DEFAULT_PREFS, prompt: 'right' }, NAMES).prefs.prompt).toBe('left')
-  expect(runSkinCommand('prompt up', DEFAULT_PREFS, NAMES).message).toBe('usage: /skin prompt left|right')
+  expect(runSkinCommand('prompt plain', DEFAULT_PREFS, NAMES).prefs.prompt).toBe('plain')
+  expect(runSkinCommand('prompt up', DEFAULT_PREFS, NAMES).message).toBe('usage: /skin prompt left|right|plain')
   expect(runSkinCommand('list', { ...DEFAULT_PREFS, prompt: 'right' }, NAMES).message).toContain('prompt right')
 })
 
