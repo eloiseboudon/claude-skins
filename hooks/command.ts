@@ -4,6 +4,7 @@ export const DEFAULT_PREFS: Prefs = {
   skin: 'noir',
   icons: 'unicode',
   prompt: 'left',
+  words: 'skin',
   rail: true,
   tables: 'on',
   shimmer: true,
@@ -93,6 +94,7 @@ export function parsePrefs(raw: unknown, names: readonly string[]): Prefs {
         : DEFAULT_PREFS.skin,
     icons: saved.icons === 'ascii' ? 'ascii' : 'unicode',
     prompt: saved.prompt === 'right' || saved.prompt === 'plain' ? saved.prompt : 'left',
+    words: saved.words === 'claude' ? 'claude' : 'skin',
     rail: flagOr(saved.rail, DEFAULT_PREFS.rail),
     tables: tablesOr(saved.tables, DEFAULT_PREFS.tables),
     shimmer: flagOr(saved.shimmer, DEFAULT_PREFS.shimmer),
@@ -140,6 +142,7 @@ export const listing = (current: Prefs, names: readonly string[]): string =>
     [
       `icons ${current.icons}`,
       `prompt ${current.prompt}`,
+      `words ${current.words}`,
       `rail ${onOff(current.rail)}`,
       `tables ${current.tables}`,
       `shimmer ${onOff(current.shimmer)}`,
@@ -200,6 +203,10 @@ export function runSkinCommand(args: string, current: Prefs, names: readonly str
       return value === 'left' || value === 'right' || value === 'plain'
         ? changed({ ...current, prompt: value }, `prompt ${value}`)
         : refused(current, 'usage: /skin prompt left|right|plain')
+    case 'words':
+      return value === 'claude' || value === 'skin'
+        ? changed({ ...current, words: value }, `words: ${value}`)
+        : refused(current, 'usage: /skin words claude|skin')
     case 'icons':
       return value === 'unicode' || value === 'ascii'
         ? changed({ ...current, icons: value }, `icons: ${value}`)

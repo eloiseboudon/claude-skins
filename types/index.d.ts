@@ -24,6 +24,9 @@ export type Prefs = {
   // Which side the outline around a typed prompt sits on; 'right' matches the desktop app.
   // 'plain' drops the outline for a leading marker.
   prompt: 'left' | 'right' | 'plain'
+  // Whose words the spinner and the turn footer show: 'claude' keeps Claude Code's own,
+  // whatever the skin says; 'skin' draws the skin's.
+  words: 'claude' | 'skin'
   rail: boolean
   // 'text' keeps the skin but draws tables and code as text the desktop can select.
   tables: 'on' | 'text' | 'off'

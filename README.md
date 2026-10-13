@@ -66,6 +66,7 @@ To keep it installed but go back to Claude Code's own drawing, run `/skin off`.
 | `/skin copy` · `copy code` | Copy Claude's last reply, or just its last code block |
 | `/skin tables on\|text\|off` | `text` draws tables and code as selectable text on the desktop |
 | `/skin prompt left\|right\|plain` | Which side your prompt's outline sits on. `right` matches the desktop app's own layout; `plain` drops the outline for a leading marker |
+| `/skin words claude\|skin` | Whose words the spinner and the turn footer show. `claude` keeps Claude Code's own, whatever the skin says; `skin` (the default) draws the skin's |
 | `/skin gallery` | Every element the skin draws, numbered, to point at |
 | `/skin pin` · `unpin` · `share` | Give this folder its own look, drop it, or make it the default |
 

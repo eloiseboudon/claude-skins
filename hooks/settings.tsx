@@ -22,6 +22,7 @@ export type SettingsActions = {
   tables: () => void
   icons: () => void
   prompt: () => void
+  words: () => void
   edit: (slot: SkinSlot) => void
   paint: (hex: string) => void
 }
@@ -128,6 +129,7 @@ export function settingsPane(look: Look, ui: PaneUi, model: SettingsModel, actio
         <Button key="calm" label={`calm ${mark(prefs.calm !== null)}`} hotkey="k" plain dimColor={prefs.calm === null} onPress={() => actions.calm()} />
         <Button key="icons" label={`icons ${prefs.icons}`} hotkey="i" plain onPress={() => actions.icons()} />
         <Button key="prompt" label={`prompt ${prefs.prompt}`} hotkey="a" plain onPress={() => actions.prompt()} />
+        <Button key="words" label={`words ${prefs.words}`} hotkey="e" plain onPress={() => actions.words()} />
       </Box>
 
       <Box flexDirection="column">

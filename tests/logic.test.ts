@@ -216,6 +216,19 @@ test('the prompt sits left, right or plain, and anything else stored reads as le
   expect(runSkinCommand('list', { ...DEFAULT_PREFS, prompt: 'right' }, NAMES).message).toContain('prompt right')
 })
 
+test('words are the skin’s or Claude Code’s, and anything else stored reads as the skin’s', async () => {
+  expect(DEFAULT_PREFS.words).toBe('skin')
+  expect(parsePrefs({ words: 'claude' }, NAMES).words).toBe('claude')
+  expect(parsePrefs({ words: 'mine' }, NAMES).words).toBe('skin')
+  expect(parsePrefs({ words: true }, NAMES).words).toBe('skin')
+  expect(parsePrefs({}, NAMES).words).toBe('skin')
+  expect(runSkinCommand('words claude', DEFAULT_PREFS, NAMES).prefs.words).toBe('claude')
+  expect(runSkinCommand('words skin', { ...DEFAULT_PREFS, words: 'claude' }, NAMES).prefs.words).toBe('skin')
+  expect(runSkinCommand('words mine', DEFAULT_PREFS, NAMES).message).toBe('usage: /skin words claude|skin')
+  expect(runSkinCommand('words', DEFAULT_PREFS, NAMES).prefs.words).toBe('skin')
+  expect(runSkinCommand('list', { ...DEFAULT_PREFS, words: 'claude' }, NAMES).message).toContain('words claude')
+})
+
 test('cells are read as colours, diffs, numbers, code or text', async () => {
   expect(kindOfCell('#7aa2f7')).toBe('colour')
   expect(kindOfCell('+18 −3')).toBe('diff')

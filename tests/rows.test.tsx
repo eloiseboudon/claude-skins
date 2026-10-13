@@ -454,6 +454,35 @@ test('the turn footer names the time in the skin’s words', async ($, on) => {
   expect(await ui.find({ type: 'Text', text: /^◆ .+ in 1m 4s$/ })).toBeDefined()
 })
 
+test('/skin words claude hands Claude Code’s own spinner and footer words through, /skin words skin takes the skin’s back', async ($, on) => {
+  stubEngine(on)
+
+  const spinner = () =>
+    $.ui.mount({ ...SITE, surface: 'terminal', component: 'Spinner', requestId: 'main', props: { word: 'Sauteing', message: null, suffix: '…', mode: 'responding' } })
+  const footer = () =>
+    $.ui.mount({ ...SITE, surface: 'terminal', component: 'TurnDuration', requestId: 'f1', props: { word: 'Baked', durationMs: 64000 } })
+  const seen = async () => {
+    const row = await spinner()
+    const turn = await footer()
+    const words = {
+      spinner: (await row.find({ type: 'Text', text: /^⠋ Sauteing…/ })) !== undefined,
+      footer: (await turn.find({ type: 'Text', text: /^◆ Baked in 1m 4s$/ })) !== undefined,
+    }
+    await row.unmount()
+    await turn.unmount()
+
+    return words
+  }
+
+  expect(await seen(), 'noir draws its own words by default').toEqual({ spinner: false, footer: false })
+
+  await runSkin($, 'words claude')
+  expect(await seen(), 'noir is a built-in skin, and its words step aside').toEqual({ spinner: true, footer: true })
+
+  await runSkin($, 'words skin')
+  expect(await seen()).toEqual({ spinner: false, footer: false })
+})
+
 test('the question dialog keeps Claude Code’s drawing under a band naming its topics', async ($, on) => {
   stubEngine(on)
 
